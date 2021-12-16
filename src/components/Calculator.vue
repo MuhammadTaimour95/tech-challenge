@@ -1,7 +1,19 @@
 <template>
   <div class="calculator">
-    <div class="display">{{ current || 0 }}</div>
-    <a-button class="dark-grey-button zero"> Rad | Deg</a-button>
+    
+    <div class="display">
+      <div class="answer">
+      <!-- {{ current || "Ans = 0" }} -->
+      </div>
+       <div class="answer">
+      {{ answer || "Ans" }}
+      </div>
+      <div class="calculation">
+      {{calculation || 0}}
+      </div>
+    </div>
+    
+    <a-button class="dark-grey-button zero"> <span style="margin-right:35px"> Rad </span>  <span style="color: #8e9095">|  </span><span style="margin-left:35px ; color: #8e9095">Deg</span></a-button>
     <a-button class="dark-grey-button"> x! </a-button>
     <a-button class="dark-grey-button"> ( </a-button>
     <a-button class="dark-grey-button"> ) </a-button>
@@ -42,7 +54,9 @@
 export default {
   data() {
     return {
-      current: "0",
+      current: "Ans = 0",
+      answer: "Ans",
+      calculation: "",
       operator: null,
       previous: null,
       operatorClicked: false,
@@ -51,6 +65,8 @@ export default {
   methods: {
     clear() {
       this.current = "";
+      this.answer = "";
+      this.calculation = "";
     },
     sign() {
       this.current =
@@ -62,6 +78,7 @@ export default {
       this.current = `${parseFloat(this.current) / 100}`;
     },
     append(number) {
+      this.calculation = this.calculation +  " " + number;
       if (this.operatorClicked) {
         this.current = "";
         this.operatorClicked = false;
@@ -78,18 +95,22 @@ export default {
       this.operatorClicked = true;
     },
     divide() {
+      this.calculation = this.calculation + " " + "÷";
       this.operator = (a, b) => a / b;
       this.setPrevious();
     },
     times() {
+      this.calculation = this.calculation + " " + "x";
       this.operator = (a, b) => a * b;
       this.setPrevious();
     },
     minus() {
+      this.calculation = this.calculation + " " + "-";
       this.operator = (a, b) => a - b;
       this.setPrevious();
     },
     plus() {
+      this.calculation = this.calculation + " " + "+";
       this.operator = (a, b) => a + b;
       this.setPrevious();
     },
@@ -98,14 +119,31 @@ export default {
         parseFloat(this.previous),
         parseFloat(this.current)
       )}`;
+      this.answer = "Ans = " + this.current
       this.previous = null;
     },
   },
+  mounted: function () {
+   this.current = "";
+      this.answer = "";
+      this.calculation = "";
+}
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.answer {
+  font-size: 14px;
+  color: #8e9095;
+  margin-top: 8px;
+}
+.calculation {
+    margin-top: -9px;
+    margin-bottom: -6px;
+    padding: 0;
+    font-size: 36px;
+}
 .calculator {
   width: 700px;
   margin: 0 auto;
@@ -117,9 +155,13 @@ export default {
 
 .display {
   grid-column: 1/8;
-  background-color: #333;
-  color: white;
+  background-color: white;
+  color: black;
   text-align: right;
+   border: 2px solid #9dbee8;
+   border-radius: 10px;
+   padding-right: 10px;
+   margin-bottom: 8px;
 }
 
 .zero {
@@ -130,14 +172,26 @@ export default {
   background-color: #eee;
   border: 1px solid #eee;
   cursor: pointer;
+  font-weight: 400;
 }
 
 .dark-grey-button {
   background-color: #dbdce0;
   border: 1px solid #dbdce0;
-  color: black;
+  color: #202124;
   cursor: pointer;
   margin: 3px;
+  font-weight: 400;
+  font-family: arial, sans-serif;
+  font-size: 13px;
+   height: 37px; 
+}
+
+.dark-grey-button:hover{
+   background-color: #dbdce0;
+  border: 1px solid #dbdce0;
+  color: #202124;
+   height: 37px;
 }
 
 .light-grey-button {
@@ -146,6 +200,28 @@ export default {
   color: black;
   cursor: pointer;
   margin: 3px;
+  font-weight: 400;
+  font-family: arial, sans-serif;
+  font-size: 13px;
+  height: 37px;
+  
+}
+
+.light-grey-button:hover{
+   background-color: #f2f3f5;
+   border: 1px solid #f2f3f5;
+   color: black;
+}
+.light-grey-button::selection{
+   background-color: #f2f3f5;
+   border: 1px solid #f2f3f5;
+   color: black;
+}
+
+.blue-button:hover{
+   border: 1px solid #4286f5;
+   color: white;
+    background-color: #4286f5;
 }
 
 .blue-button {
@@ -154,6 +230,9 @@ export default {
   color: white;
   cursor: pointer;
   margin: 3px;
+   font-family: arial, sans-serif;
+  font-size: 13px;
+   height: 37px;
 }
 
 .btn:active {
